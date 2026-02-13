@@ -16,7 +16,7 @@ COLOR_BLUE = "\033[94m"
 COLOR_PURPLE = "\033[95m"
 COLOR_CYAN = "\033[96m"
 COLOR_WHITE = "\033[97m"
-
+COLOR_ORANGE = "\033[38;5;208m"
 
 
 def fireball_effect(target):
@@ -77,7 +77,7 @@ STARTING_SPELLS = {
     "Default": ["Heal"]
 }
 
-
+# Player class
 class Player:
     def __init__(self, name, player_class="Default"):
         self.name = name
@@ -92,6 +92,7 @@ class Player:
         self.health = self.max_health
         self.attack_power = stats["attack_power"]
         self.defense = stats["defense"]
+        self.max_defense = self.defense
         self.agility = stats["agility"]
         self.crit_chance = stats["crit_chance"]  # Critical chance percentage
         self.mana = stats.get("mana", 50)
@@ -157,7 +158,7 @@ class Player:
         word_by_word(
             COLOR_GREEN + f"Max Health : {self.max_health}"
             + COLOR_RED + f"\nCurrent Health : {self.health}"
-            + COLOR_RED + f"\nCurrent Attack Power : {self.attack_power}"
+            + COLOR_ORANGE + f"\nCurrent Attack Power : {self.attack_power}"
             + COLOR_CYAN + f"\nCurrent Defense : {self.defense}"
             + COLOR_YELLOW + f"\nCritical Chance : {self.crit_chance}%"
             + COLOR_BLUE + f"\nMana : {self.mana}/{self.max_mana}"
@@ -199,7 +200,7 @@ class Player:
         self.heal()
         self.regenerate_mana(self.max_mana)
 
-
+# Enemy class
 class Enemy:
     def __init__(self, name, base_health, base_attack_power, xp_reward, level):
         self.name = name
@@ -217,10 +218,12 @@ class Enemy:
     def take_damage(self, damage):
         self.health -= damage
 
+# Function to play background music
 def background_music(player):
     pygame.mixer.music.load("Sounds/moonlit_melody.mp3")
     pygame.mixer.music.play(-1)
-        
+
+# Function to check player's health and play heartbeat sound if health is low
 def check_health_warning(player):
     heartbeat_sound = pygame.mixer.Sound("Sounds/heartbeat.mp3")
     heartbeat_playing = False
@@ -242,6 +245,7 @@ def check_health_warning(player):
         
         pygame.time.wait(1000)  # Check every second
 
+# Function to print text with a typing effect
 def word_by_word(text, delay=0.1):
     """Prints text word by word with a typing effect."""
     lines = text.split('\n')  # Split the text into lines
@@ -253,6 +257,7 @@ def word_by_word(text, delay=0.1):
             time.sleep(delay)
         print()  # Move to the next line after the text
 
+# Function to get user input with a typing effect for the prompt
 def get_input_with_typing(prompt, delay=0.05):
     """Prints a prompt with a typing effect and gets user input."""
     word_by_word(prompt, delay)
@@ -283,7 +288,7 @@ locations = {
                ("Ice Golem", 50, 17, 40)]
 }
 
-# Main game loop
+# Start of the game
 player_name = get_input_with_typing("Enter your name: ")
 word_by_word("Choose your class:")
 for index, (class_name, stats) in enumerate(PLAYER_CLASSES.items(), start=1):
@@ -332,6 +337,8 @@ health_thread.start()
 
 current_location = "Forest"
 level_range = 2
+
+# Main game loop
 while player.health > 0:
     word_by_word(f"You are currently in the " + COLOR_GREEN + f"{current_location}." + COLOR_RESET)
     action = get_input_with_typing("Do you want to (e)xplore, (i)nspect inventory, (r)est, (v)iew stats, go to a (n)ew location, or (q)uit?")
@@ -372,7 +379,12 @@ while player.health > 0:
                                         if 0 <= spell_choice < len(player.spells):
                                             enemy_health_before = enemy.health
                                             selected_spell = player.spells[spell_choice]
-                                            player.cast_spell(selected_spell, enemy)
+                                            if selected_spell == "Fireball":
+                                                player.cast_spell(selected_spell, enemy)
+                                            elif selected_spell == "Heal":
+                                                player.cast_spell(selected_spell, player)
+                                            elif selected_spell == "Shield":
+                                                player.cast_spell(selected_spell, player)
                                             word_by_word(f"{enemy.name} health: {enemy_health_before} -> {enemy.health}")
                                             break
                                         else:
@@ -494,10 +506,11 @@ while player.health > 0:
                     item = random.choice(player.items)
                     player.add_to_inventory(item)
                     word_by_word(COLOR_CYAN + f"{player.name} gained a {item}" + COLOR_RESET)
+                player.defense = player.max_defense
 
                 # Check for level up
                 if player.xp >= player.level_up:
-                    level_up_sound = pygame.mixer.Sound("Sounds/level_up.mp3")0
+                    level_up_sound = pygame.mixer.Sound("Sounds/level_up.mp3")
                     if not pygame.mixer.music.get_busy():
                         pygame.mixer.music.play(-1)  # Restart background music if stopped
                     level_up_sound.play()  
@@ -617,7 +630,10 @@ while player.health > 0:
     elif action.lower() == "q":
         break
 
-word_by_word(COLOR_RED + "Game over. You have been defeated." + COLOR_RESET)
+if player.health <= 0:
+    word_by_word(COLOR_RED + "Game over. You have been defeated." + COLOR_RESET)
+else:
+    word_by_word(COLOR_GREEN + "Thanks for playing!" + COLOR_RESET)
 
 pygame.mixer.stop()
 pygame.quit()
