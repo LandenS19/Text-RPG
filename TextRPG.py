@@ -46,10 +46,26 @@ def shield_effect(target):
 
 
 PLAYER_CLASSES = {
-    "Warrior": {"max_health": 120, "attack_power": 18, "defense": 7, "crit_chance": 15, "mana": 30, "magic_attack_power": 5, "agility": 10},
-    "Mage": {"max_health": 80, "attack_power": 12, "defense": 5, "crit_chance": 15, "mana": 100, "magic_attack_power": 20, "agility": 10},
-    "Rogue": {"max_health": 100, "attack_power": 15, "defense": 6, "crit_chance": 25, "mana": 50, "magic_attack_power": 10, "agility": 20},
-    "Default": {"max_health": 100, "attack_power": 10, "defense": 5, "crit_chance": 15, "mana": 50, "magic_attack_power": 10, "agility": 10},
+    "Warrior":     {"max_health": 140, "attack_power": 22, "defense": 12, "crit_chance": 10, "mana": 20,  "magic_attack_power": 4,  "agility": 8},
+    "Mage":        {"max_health": 90,  "attack_power": 8,  "defense": 4,  "crit_chance": 5,  "mana": 120, "magic_attack_power": 28, "agility": 6},
+    "Rogue":       {"max_health": 100, "attack_power": 16, "defense": 6,  "crit_chance": 20, "mana": 30,  "magic_attack_power": 5,  "agility": 18},
+    "Paladin":     {"max_health": 130, "attack_power": 14, "defense": 14, "crit_chance": 8,  "mana": 60,  "magic_attack_power": 10, "agility": 7},
+    "Ranger":      {"max_health": 110, "attack_power": 15, "defense": 8,  "crit_chance": 12, "mana": 30,  "magic_attack_power": 7,  "agility": 15},
+    "Berserker":   {"max_health": 150, "attack_power": 26, "defense": 6,  "crit_chance": 8,  "mana": 20,  "magic_attack_power": 3,  "agility": 10},
+    "Monk":        {"max_health": 115, "attack_power": 14, "defense": 10, "crit_chance": 10, "mana": 40,  "magic_attack_power": 8,  "agility": 12},
+    "Necromancer": {"max_health": 85,  "attack_power": 10, "defense": 5,  "crit_chance": 6,  "mana": 100, "magic_attack_power": 24, "agility": 7},
+    "Druid":       {"max_health": 105, "attack_power": 12, "defense": 10, "crit_chance": 7,  "mana": 80,  "magic_attack_power": 18, "agility": 11},
+    "Cleric":      {"max_health": 125, "attack_power": 10, "defense": 12, "crit_chance": 5,  "mana": 90,  "magic_attack_power": 16, "agility": 7},
+    "Barbarian":   {"max_health": 160, "attack_power": 28, "defense": 14, "crit_chance": 7,  "mana": 15,  "magic_attack_power": 2,  "agility": 9},
+    "Sorcerer":    {"max_health": 85,  "attack_power": 9,  "defense": 5,  "crit_chance": 5,  "mana": 140, "magic_attack_power": 30, "agility": 6},
+    "Assassin":    {"max_health": 90,  "attack_power": 20, "defense": 5,  "crit_chance": 25, "mana": 25,  "magic_attack_power": 4,  "agility": 20},
+    "Bard":        {"max_health": 105, "attack_power": 11, "defense": 8,  "crit_chance": 6,  "mana": 70,  "magic_attack_power": 12, "agility": 12},
+    "Elementalist":{"max_health": 90,  "attack_power": 9,  "defense": 6,  "crit_chance": 5,  "mana": 130, "magic_attack_power": 29, "agility": 7},
+    "Templar":     {"max_health": 140, "attack_power": 13, "defense": 16, "crit_chance": 5,  "mana": 40,  "magic_attack_power": 8,  "agility": 6},
+    "Shaman":      {"max_health": 110, "attack_power": 11, "defense": 9,  "crit_chance": 6,  "mana": 85,  "magic_attack_power": 17, "agility": 10},
+    "Hunter":      {"max_health": 110, "attack_power": 16, "defense": 8,  "crit_chance": 13, "mana": 35,  "magic_attack_power": 8,  "agility": 14},
+    "Alchemist":   {"max_health": 100, "attack_power": 10, "defense": 7,  "crit_chance": 6,  "mana": 80,  "magic_attack_power": 14, "agility": 11},
+    "Priest":      {"max_health": 120, "attack_power": 9,  "defense": 11, "crit_chance": 5,  "mana": 120, "magic_attack_power": 20, "agility": 7}
 }
 
 SPELLS = {
@@ -156,8 +172,7 @@ class Player:
     
     def stats(self):
         word_by_word(
-            COLOR_GREEN + f"Max Health : {self.max_health}"
-            + COLOR_RED + f"\nCurrent Health : {self.health}"
+            COLOR_RED + f"\nCurrent Health : {self.health} / {self.max_health}"
             + COLOR_ORANGE + f"\nCurrent Attack Power : {self.attack_power}"
             + COLOR_CYAN + f"\nCurrent Defense : {self.defense}"
             + COLOR_YELLOW + f"\nCritical Chance : {self.crit_chance}%"
@@ -455,7 +470,7 @@ while player.health > 0:
                             try:
                                 # Inspect inventory
                                 player.show_inventory()
-                                item_use = get_input_with_typing(f"Return (9)\n:")
+                                item_use = get_input_with_typing(f"Return (9):")
                                 item_use = int(item_use)  # Convert input to integer
 
                                 item_actions = {
@@ -584,7 +599,7 @@ while player.health > 0:
             try:
                 # Inspect inventory
                 player.show_inventory()
-                item_use = get_input_with_typing(f"Return (9)\n")
+                item_use = get_input_with_typing(f"Return (9)")
                 item_use = int(item_use)  # Convert input to integer
 
                 item_actions = {
