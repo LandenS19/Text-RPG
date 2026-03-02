@@ -137,9 +137,6 @@ class Player:
 
     def attack(self):
         damage = random.randint(1, self.attack_power)
-        if random.randint(1, 100) <= self.crit_chance:
-            word_by_word(COLOR_RED + f"Critical Hit! {self.name} deals {damage + self.crit_damage:.0f} damage!" + COLOR_RESET)
-            return damage + self.crit_damage
         return damage
 
     def defend(self):
@@ -325,18 +322,10 @@ while True:
 
 player = Player(name=player_name, player_class=selected_class)
 word_by_word(COLOR_GREEN + "Your journey begins..." + COLOR_RESET)
-if selected_class == "Warrior":
-    for spell in STARTING_SPELLS["Warrior"]:
-        player.learn_spell(spell)
-elif selected_class == "Mage":
-    for spell in STARTING_SPELLS["Mage"]:
-        player.learn_spell(spell)
-elif selected_class == "Rogue":
-    for spell in STARTING_SPELLS["Rogue"]:
-        player.learn_spell(spell)
-else:
-    for spell in STARTING_SPELLS["Default"]:
-        player.learn_spell(spell)
+# Learn starting spells based on class
+spells_to_learn = STARTING_SPELLS.get(selected_class, STARTING_SPELLS["Default"])
+for spell in spells_to_learn:
+    player.learn_spell(spell)
 
 
     

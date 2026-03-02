@@ -3,6 +3,7 @@ Here's a list of player classes that could be added to your game to provide play
 1. **Warrior**
    - **Strengths:** High attack power, good defense.
    - **Special Abilities:** Power Strike (a strong attack that deals extra damage), Shield Block (reduces incoming damage for a turn).
+   - **Stats:** "max_health": 140, "attack_power": 22, "defense": 12, "crit_chance": 10, "mana": 20,  "magic_attack_power": 4,  "agility": 8
 
 2. **Mage**
    - **Strengths:** High magic attack power, versatile with spells.
